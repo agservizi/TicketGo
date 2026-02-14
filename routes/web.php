@@ -28,13 +28,24 @@ require __DIR__ . '/auth.php';
 Route::any('/cookie-consent', [SettingsController::class, 'CookieConsent'])->name('cookie-consent');
 
 Route::get('/sidebar-logo', function () {
-    $logoPath = base_path('uploads/logo/logoticketgo.png');
+    $logoSettingPath = getSidebarLogo();
+    $logoBasePath = base_path($logoSettingPath);
+    $logoPublicPath = public_path($logoSettingPath);
 
-    if (!file_exists($logoPath)) {
-        abort(404);
+    if (file_exists($logoBasePath)) {
+        return response()->file($logoBasePath);
     }
 
-    return response()->file($logoPath);
+    if (file_exists($logoPublicPath)) {
+        return response()->file($logoPublicPath);
+    }
+
+    $logoUrl = getFile($logoSettingPath);
+    if (!empty($logoUrl)) {
+        return redirect()->away($logoUrl);
+    }
+
+    abort(404);
 })->name('sidebar.logo');
 
 Route::controller(HomeController::class)->group(function () {
