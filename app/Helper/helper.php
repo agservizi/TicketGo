@@ -539,6 +539,14 @@ if (!function_exists('deleteFile')) {
 if (!function_exists('getFile')) {
     function getFile($path)
     {
+        if (empty($path)) {
+            return asset('');
+        }
+
+        if (File::exists(base_path($path)) || File::exists(public_path($path))) {
+            return asset($path);
+        }
+
         $storageSettings = getCompanyAllSettings();
         if (isset($storageSettings['storage_setting']) && $storageSettings['storage_setting'] == 's3') {
             config(
