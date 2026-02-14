@@ -77,7 +77,7 @@ class User extends Authenticatable implements LaratrustUser
             $lang = $this->parentUser()->lang;
         }
         $dir = base_path() . '/resources/lang/' . $lang . "/";
-        return is_dir($dir) ? $lang : 'en';
+        return is_dir($dir) ? $lang : 'it';
     }
 
     public function getCreatedBy()

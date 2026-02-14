@@ -7,15 +7,23 @@ use App\Models\NotificationTemplateLangs;
 use App\Models\NotificationTemplates;
 use App\Models\Utility;
 use App\Models\Languages;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class NotificationTemplatesController extends Controller
 {
+    private function authUser(): User
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        return $user;
+    }
+
     public function index(Request $request)
     {
-        if (Auth::user()->isAbleTo('notification-template manage')) {
+        if ($this->authUser()->isAbleTo('notification-template manage')) {
             $notifications = NotificationTemplates::where('type', '!=', 'mail')->get()->groupBy('type');
             return view('notification_templates.index', compact('notifications'));
         } else {
@@ -23,9 +31,9 @@ class NotificationTemplatesController extends Controller
         }
     }
 
-    public function manageNotificationLang($id, $lang = 'en')
+    public function manageNotificationLang($id, $lang = 'it')
     {
-        if (Auth::user()->isAbleTo('notification-template view')) {
+        if ($this->authUser()->isAbleTo('notification-template view')) {
             $notification_template     = NotificationTemplates::where('id', $id)->first();
             if ($notification_template) {
                 $languages         = languages();
@@ -48,7 +56,7 @@ class NotificationTemplatesController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Auth::user()->isAbleTo('notification-template edit')) {
+        if ($this->authUser()->isAbleTo('notification-template edit')) {
             $validator = Validator::make(
                 $request->all(),
                 [

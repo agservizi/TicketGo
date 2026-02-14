@@ -9,16 +9,23 @@ use App\Models\Languages;
 use App\Models\NotificationTemplateLangs;
 use App\Models\NotificationTemplates;
 use App\Models\Settings;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class EmailTemplateController extends Controller
 {
+    private function authUser(): User
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        return $user;
+    }
 
     public function index()
     {
-        if (Auth::user()->isAbleTo('email-template manage')) {
+        if ($this->authUser()->isAbleTo('email-template manage')) {
             $emailTemplates = NotificationTemplates::where('type','mail')->get();
             return view('email_templates.index', compact('emailTemplates'));
         } else {
@@ -28,7 +35,7 @@ class EmailTemplateController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Auth::user()->isAbleTo('email-template edit')) {
+        if ($this->authUser()->isAbleTo('email-template edit')) {
             $emailTemplate = NotificationTemplates::find($id);
             if ($emailTemplate) {
                 $emailTemplate->from = $request->from;
@@ -44,16 +51,16 @@ class EmailTemplateController extends Controller
 
 
 
-    public function manageEmailLang($id, $lang = 'en')
+    public function manageEmailLang($id, $lang = 'it')
     {
-        if (Auth::user()->isAbleTo('email-template view')) {
+        if ($this->authUser()->isAbleTo('email-template view')) {
             $languages         = languages();
             $emailTemplate = NotificationTemplates::where('id', '=', $id)->first();
             if ($emailTemplate) {
                 $currEmailTempLang = NotificationTemplateLangs::where('parent_id', '=', $id)->where('lang', $lang)->first();
                 if ($currEmailTempLang) {
                     if (!isset($currEmailTempLang) || empty($currEmailTempLang)) {
-                        $currEmailTempLang       = NotificationTemplateLangs::where('parent_id', '=', $id)->where('lang', 'en')->first();
+                        $currEmailTempLang       = NotificationTemplateLangs::where('parent_id', '=', $id)->where('lang', 'it')->first();
                         $currEmailTempLang->lang = $lang;
                     }
                     return view('email_templates.show', compact('emailTemplate', 'languages', 'currEmailTempLang'));
@@ -72,7 +79,7 @@ class EmailTemplateController extends Controller
     // Used For Store Email Template Language Wise
     public function storeEmailLang(Request $request, $id)
     {
-        if (Auth::user()->isAbleTo('email-template edit')) {
+        if ($this->authUser()->isAbleTo('email-template edit')) {
             $validator = Validator::make(
                 $request->all(),
                 [

@@ -50,9 +50,9 @@ class HomeController extends Controller
         try {
             $language = getActiveLanguage();
         } catch (\Throwable $th) {
-            $language = 'en';
+            $language = 'it';
         }
-        App::setLocale(isset($language) ? $language : 'en');
+        App::setLocale(isset($language) ? $language : 'it');
     }
     public function index()
     {
@@ -65,7 +65,7 @@ class HomeController extends Controller
         $priorities = Priority::get();
 
         $settings = getCompanyAllSettings();
-        $language = isset($settings['default_language']) ? $settings['default_language'] : 'en';
+        $language = isset($settings['default_language']) ? $settings['default_language'] : 'it';
         Session::put('default_language', $language);
         $ticket = null;
         return view('home', compact('categoryTree', 'customFields', 'settings', 'priorities', 'ticket'));
@@ -78,7 +78,7 @@ class HomeController extends Controller
         if ($lang == '') {
             $lang = getActiveLanguage();
         } else {
-            $lang = array_key_exists($lang, languages()) ? $lang : 'en';
+            $lang = array_key_exists($lang, languages()) ? $lang : 'it';
         }
         $language = Languages::where('code', $lang)->first();
         App::setLocale($lang);

@@ -1,5 +1,5 @@
 @php
-    $currantLang = !empty(\Auth::user()->lang) ? \Auth::user()->lang : 'en';
+    $currantLang = !empty(\Auth::user()->lang) ? \Auth::user()->lang : 'it';
 @endphp
 <form action="" id="myForm" class="needs-validation" novalidate>
     @csrf

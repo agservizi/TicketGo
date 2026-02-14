@@ -31,10 +31,17 @@ class UserController extends Controller
         // $this->authorizeResource(User::class);
     }
 
+    private function authUser(): User
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        return $user;
+    }
+
 
     public function index()
     {
-        if (Auth::user()->isAbleTo('user manage')) {
+        if ($this->authUser()->isAbleTo('user manage')) {
             $users = User::where('created_by', creatorId())->get();
             return view('admin.users.index', compact('users'));
         } else {
@@ -45,7 +52,7 @@ class UserController extends Controller
 
     public function create()
     {
-        if (Auth::user()->isAbleTo('user create')) {
+        if ($this->authUser()->isAbleTo('user create')) {
             // $categories = Category::where('created_by', creatorId())->get();
             // $categoryTree = buildCategoryTree($categories);
             $roles = Role::where('created_by', creatorId())->get();
@@ -62,7 +69,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        if (Auth::user()->isAbleTo('user create')) {
+        if ($this->authUser()->isAbleTo('user create')) {
             $request->validate([
                 'name'    => 'required|string|max:255',
                 'email'   => 'required|string|email|max:255|unique:users',
@@ -91,7 +98,7 @@ class UserController extends Controller
             $user->parent = creatorId();
             $user->is_enable_login = $request->password_switch == 'on' ? '1' : '0';
             $user->type = isset($role) ? $role->name : '';
-            $user->lang = isset($settings['default_language']) ? $settings['default_language'] : 'en';
+            $user->lang = isset($settings['default_language']) ? $settings['default_language'] : 'it';
             $user->created_by = creatorId();
             if ($request->hasFile('avatar')) {
                 $filenameWithExt = $request->file('avatar')->getClientOriginalName();
@@ -130,7 +137,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        if (Auth::user()->isAbleTo('user edit')) {
+        if ($this->authUser()->isAbleTo('user edit')) {
             $categories = Category::where('created_by', creatorId())->get();
             // $categoryTree = buildCategoryTree($categories);
             $roles = Role::where('created_by', creatorId())->get();
@@ -142,13 +149,13 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        if (Auth::user()->isAbleTo('user edit')) {
+        if ($this->authUser()->isAbleTo('user edit')) {
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => [
                     'required',
                     Rule::unique('users')->where(function ($query)  use ($user) {
-                        return $query->whereNotIn('id', [$user->id])->where('parent',  Auth::user()->createId());
+                        return $query->whereNotIn('id', [$user->id])->where('parent',  $this->authUser()->createId());
                     }),
 
                 ],
@@ -196,7 +203,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if (Auth::user()->isAbleTo('user delete')) {
+        if ($this->authUser()->isAbleTo('user delete')) {
             event(new DestroyUser($user));
             // delete the role of the user role_user table
             $user->roles()->detach();
@@ -222,8 +229,8 @@ class UserController extends Controller
 
     public function userlog(Request $request)
     {
-        if (Auth::user()->isAbleTo('userlog manage')) {
-            $objUser = Auth::user();
+        if ($this->authUser()->isAbleTo('userlog manage')) {
+            $objUser = $this->authUser();
             $date = new DateTime($request->month);
 
             $usersList = User::where('parent', '=', $objUser->createId())->get()->pluck('name', 'id');
@@ -261,7 +268,7 @@ class UserController extends Controller
 
     public function userlogview($id)
     {
-        if (Auth::user()->isAbleTo('userlog show')) {
+        if ($this->authUser()->isAbleTo('userlog show')) {
             $userlog = LoginDetails::find($id);
             return view('admin.users.viewUserLog', compact('userlog'));
         } else {
@@ -271,7 +278,7 @@ class UserController extends Controller
 
     public function userlogDestroy($id)
     {
-        if (Auth::user()->isAbleTo('userlog delete')) {
+        if ($this->authUser()->isAbleTo('userlog delete')) {
             $userlog = LoginDetails::find($id);
             if ($userlog) {
                 $userlog->delete();
@@ -286,7 +293,7 @@ class UserController extends Controller
 
     public function LoginManage($id)
     {
-        if (Auth::user()->isAbleTo('user login manage')) {
+        if ($this->authUser()->isAbleTo('user login manage')) {
             $eId = Crypt::decrypt($id);
             $user = User::find($eId);
             if ($user->is_enable_login == 1) {
@@ -305,7 +312,7 @@ class UserController extends Controller
 
     public function userPassword($id)
     {
-        if (Auth::user()->isAbleTo('user login manage') || Auth::user()->isAbleTo('user reset password')) {
+        if ($this->authUser()->isAbleTo('user login manage') || $this->authUser()->isAbleTo('user reset password')) {
             $eId  = Crypt::decrypt($id);
             $user = User::find($eId);
 
@@ -320,7 +327,7 @@ class UserController extends Controller
 
     public function userPasswordReset(Request $request, $id)
     {
-        if (Auth::user()->isAbleTo('user login manage') || Auth::user()->isAbleTo('user reset password')) {
+        if ($this->authUser()->isAbleTo('user login manage') || $this->authUser()->isAbleTo('user reset password')) {
             $validator = Validator::make(
                 $request->all(),
                 [
@@ -345,8 +352,8 @@ class UserController extends Controller
 
     public function profile()
     {
-        if (Auth::user()->isAbleTo('user profile manage')) {
-            $user = Auth::user();
+        if ($this->authUser()->isAbleTo('user profile manage')) {
+            $user = $this->authUser();
 
             $google2fa = new \PragmaRX\Google2FAQRCode\Google2FA();
             $google2fa_url = $google2fa->getQRCodeInline(
@@ -370,7 +377,7 @@ class UserController extends Controller
 
     public function editprofile(Request $request,  $id)
     {
-        if (Auth::user()->isAbleTo('user profile manage')) {
+        if ($this->authUser()->isAbleTo('user profile manage')) {
 
             $user = User::findOrFail($id);
 
@@ -421,8 +428,8 @@ class UserController extends Controller
     }
     public function updatePassword(Request $request)
     {
-        if (Auth::user()->isAbleTo('user profile manage')) {
-            if (\Auth::Check()) {
+        if ($this->authUser()->isAbleTo('user profile manage')) {
+            if (Auth::check()) {
                 $request->validate(
                     [
                         'current_password' => 'required',
@@ -430,7 +437,7 @@ class UserController extends Controller
                         'confirm_password' => 'required|same:new_password',
                     ]
                 );
-                $objUser          = Auth::user();
+                $objUser          = $this->authUser();
                 $request_data     = $request->All();
                 $current_password = $objUser->password;
                 if (Hash::check($request_data['current_password'], $current_password)) {
@@ -444,7 +451,7 @@ class UserController extends Controller
                     return redirect()->route('profile', $objUser->id)->with('error', __('Please enter correct current password.'));
                 }
             } else {
-                return redirect()->route('profile', \Auth::user()->id)->with('error', __('Something is wrong.'));
+                return redirect()->route('profile', Auth::user()->id)->with('error', __('Something is wrong.'));
             }
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));

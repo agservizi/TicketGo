@@ -274,7 +274,7 @@
                                     @php
                                         $defaultSelectedLang = isset($setting['default_language'])
                                             ? $setting['default_language']
-                                            : 'en';
+                                            : 'it';
                                     @endphp
                                     <div class="col-md-6 col-12">
                                         <div class="form-group mb-0">

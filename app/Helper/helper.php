@@ -700,23 +700,7 @@ if (!function_exists('flagOfCountry')) {
     function flagOfCountry()
     {
         $arr = [
-            'ar' => '🇦🇪 ar',
-            'da' => '🇩🇰 da',
-            'de' => '🇩🇪 de',
-            'es' => '🇪🇸 es',
-            'fr' => '🇫🇷 fr',
             'it' => '🇮🇹 it',
-            'ja' => '🇯🇵 ja',
-            'nl' => '🇳🇱 nl',
-            'pl' => '🇵🇱 pl',
-            'ru' => '🇷🇺 ru',
-            'pt' => '🇵🇹 pt',
-            'en' => '🇮🇳 en',
-            'tr' => '🇹🇷 tr',
-            'pt-br' => '🇵🇹 pt-br',
-            'zh' => '🇨🇳 zh',
-            'he' => '🇮🇱 he',
-
         ];
         return $arr;
     }
@@ -1071,7 +1055,13 @@ if (!function_exists('makeEmailLang')) {
     {
         $templates = NotificationTemplates::all();
         foreach ($templates as $template) {
-            $default_lang = NotificationTemplateLangs::where('parent_id', '=', $template->id)->where('lang', 'LIKE', 'en')->first();
+            $default_lang = NotificationTemplateLangs::where('parent_id', '=', $template->id)->where('lang', 'LIKE', 'it')->first();
+            if (!$default_lang) {
+                $default_lang = NotificationTemplateLangs::where('parent_id', '=', $template->id)->first();
+            }
+            if (!$default_lang) {
+                continue;
+            }
             $emailTemplateLang = new NotificationTemplateLangs();
             $emailTemplateLang->parent_id = $template->id;
             $emailTemplateLang->lang = $lang;

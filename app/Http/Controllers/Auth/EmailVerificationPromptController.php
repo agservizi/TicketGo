@@ -13,11 +13,7 @@ class EmailVerificationPromptController extends Controller
     {
 
         $settings = getCompanyAllSettings();
-        $lang = '';
-
-        if ($lang == '') {
-            $lang =  isset($settings['default_language']) ? $settings['default_language'] : 'it';
-        }
+        $lang = getActiveLanguage() ?: ($settings['default_language'] ?? 'it');
 
         App::setLocale($lang);
         return $request->user()->hasVerifiedEmail()

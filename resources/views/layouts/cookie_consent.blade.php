@@ -81,7 +81,7 @@
 
         // run plugin with your configuration
         cc.run({
-            current_lang: 'en',
+            current_lang: 'it',
             autoclear_cookies: true, // default: false
             page_scripts: true,
             // ...
@@ -116,11 +116,11 @@
             },
 
             languages: {
-                'en': {
+                'it': {
                     consent_modal: {
                         title: data.cookie_title,
                         description: data.cookie_description + ' ' +
-                            '<button type="button" data-cc="c-settings" class="cc-link">Let me choose</button>',
+                            '<button type="button" data-cc="c-settings" class="cc-link">Lasciami scegliere</button>',
                         primary_btn: {
                             text: "{{ __('Accept all') }}",
                             role: 'accept_all' // 'accept_selected' or 'accept_all'
@@ -132,21 +132,21 @@
                     },
                     settings_modal: {
                         title: "{{ __('Cookie preferences') }}",
-                        save_settings_btn: 'Save settings',
+                        save_settings_btn: 'Salva impostazioni',
                         accept_all_btn: "{{ __('Accept all') }}",
                         reject_all_btn: "{{ __('Reject all') }}",
                         close_btn_label: "{{ __('Close ') }}",
                         cookie_table_headers: [{
-                                col1: 'Name'
+                                col1: 'Nome'
                             },
                             {
-                                col2: 'Domain'
+                                col2: 'Dominio'
                             },
                             {
-                                col3: 'Expiration'
+                                col3: 'Scadenza'
                             },
                             {
-                                col4: 'Description'
+                                col4: 'Descrizione'
                             }
                         ],
                         blocks: [{
@@ -163,7 +163,7 @@
                         }, {
                             title: "{{ __('More information') }}",
                             description: data.contact_description +
-                                ' , please <a class="cc-link" href="#yourcontactpage">' + data.contact_url +
+                                ' , visita <a class="cc-link" href="#yourcontactpage">' + data.contact_url +
                                 '</a>.',
                         }]
                     }

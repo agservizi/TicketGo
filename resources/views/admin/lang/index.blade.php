@@ -10,7 +10,7 @@
 @endsection
 @section('multiple-action-button')
     @permission('language delete')
-        @if ($currantLang != (!empty($settings['default_language']) ? $settings['default_language'] : 'en'))
+        @if ($currantLang != (!empty($settings['default_language']) ? $settings['default_language'] : 'it'))
             <div class="action-btn btn btn-sm btn-danger btn-icon m-1 float-end ms-2">
                 <form method="POST" action="{{ route('admin.lang.destroy', $currantLang) }}" id="delete-form-{{ $currantLang }}">
                     @csrf
@@ -26,7 +26,7 @@
     @endpermission
 
     @permission('language enable/disable')
-        @if ($currantLang != (!empty($settings['default_language']) ? $settings['default_language'] : 'en'))
+        @if ($currantLang != (!empty($settings['default_language']) ? $settings['default_language'] : 'it'))
             <div class="form-check form-switch custom-switch-v1 float-end" style="padding-top: 7px;">
                 <input type="hidden" name="disable_lang" value="off">
                 <input type="checkbox" class="form-check-input input-primary" name="disable_lang" data-bs-placement="top"

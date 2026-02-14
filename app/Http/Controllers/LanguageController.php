@@ -12,16 +12,23 @@ use App\Models\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use ZipArchive;
 
 class LanguageController extends Controller
 {
+    private function authUser(): User
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        return $user;
+    }
 
     public function manageLanguage($currantLang, $module = 'general')
     {
-        $user = Auth::user();
-        if (Auth::user()->isAbleTo('language manage')) {
+        $user = $this->authUser();
+        if ($this->authUser()->isAbleTo('language manage')) {
             $languages = Languages::pluck('fullName', 'code');
             $modules = getshowModuleList();
             $settings = getCompanyAllSettings();
@@ -78,17 +85,17 @@ class LanguageController extends Controller
 
     public function create()
     {
-        if (Auth::user()->isAbleTo('language create')) {
-            $user = Auth::user();
+        if ($this->authUser()->isAbleTo('language create')) {
+            $user = $this->authUser();
             return view('admin.lang.create', compact('user'));
         } else {
             return response()->json(['error' => 'Permission Denied.'], 401);
         }
     }
 
-    public function store(Request $request, $lang = 'en', $addOn = "general")
+    public function store(Request $request, $lang = 'it', $addOn = "general")
     {
-        if (Auth::user()->isAbleTo('language create')) {
+        if ($this->authUser()->isAbleTo('language create')) {
             $languageExist = Languages::where('code', $request->code)->orWhere('fullName', $request->fullname)->first();
             if (empty($languageExist)) {
                 $language = new Languages();
@@ -108,13 +115,13 @@ class LanguageController extends Controller
                 }
                 $dir      = $dir . '/' . $langCode;
                 $jsonFile = $dir . ".json";
-                \File::copy($langDir . 'en.json', $jsonFile);
+                File::copy($langDir . 'it.json', $jsonFile);
 
                 if (!is_dir($dir)) {
                     mkdir($dir);
                     chmod($dir, 0777);
                 }
-                $Filesystem->copyDirectory($langDir . "en", $dir . "/");
+                $Filesystem->copyDirectory($langDir . "it", $dir . "/");
 
                 $modules = AddonFacade::allModules();
                 if ($modules) {
@@ -135,8 +142,8 @@ class LanguageController extends Controller
 
                             $jsonFile = $dir . ".json";
 
-                            if (file_exists($langDir . 'en.json')) {
-                                \File::copy($langDir . 'en.json', $jsonFile);
+                            if (file_exists($langDir . 'it.json')) {
+                                File::copy($langDir . 'it.json', $jsonFile);
                                 chmod($jsonFile, 0777);
                             }
                             if (!is_dir($dir)) {
@@ -144,7 +151,7 @@ class LanguageController extends Controller
                                 chmod($dir, 0777);
                             }
 
-                            $Filesystem->copyDirectory($langDir . "en", $dir . "/");
+                            $Filesystem->copyDirectory($langDir . "it", $dir . "/");
                         }
                     }
                 }
@@ -159,7 +166,7 @@ class LanguageController extends Controller
     }
     public function storeData(Request $request, $currantLang, $module = 'general')
     {
-        $user = Auth::user();
+        $user = $this->authUser();
         if ($user->isAbleTo('language manage')) {
             if ($module == 'general') {
                 $dir = base_path() . '/resources/lang/';
@@ -223,7 +230,7 @@ class LanguageController extends Controller
 
     public function update($lang)
     {
-        $user  = Auth::user();
+        $user  = $this->authUser();
         $data = [
             'name' => 'site_rtl',
             'created_by' => $user->id
@@ -243,7 +250,7 @@ class LanguageController extends Controller
 
     public function disableLang(Request $request)
     {
-        if (Auth::user()->isAbleTo('language enable/disable')) {
+        if ($this->authUser()->isAbleTo('language enable/disable')) {
             $settings = getCompanyAllSettings();
             $disablelang  = '';
             if ($request->mode == 'off') {
@@ -282,8 +289,8 @@ class LanguageController extends Controller
     }
     public function destroyLang($lang)
     {
-        if (Auth::user()->isAbleTo('language delete')) {
-            $usr = Auth::user();
+        if ($this->authUser()->isAbleTo('language delete')) {
+            $usr = $this->authUser();
             $default_lang = $usr->lang;
 
             // Remove Email Template Language
@@ -327,7 +334,7 @@ class LanguageController extends Controller
 
     public function exportLanguageJson(Request  $request)
     {
-        if (Auth::user()->isAbleTo('language manage')) {
+        if ($this->authUser()->isAbleTo('language manage')) {
             $tempDirectory = storage_path('temp-lang-files');
             if (!file_exists($tempDirectory)) {
                 mkdir($tempDirectory, 0755, true);
@@ -376,7 +383,7 @@ class LanguageController extends Controller
 
     public function importLangJsonUpload(Request $request)
     {
-        if (Auth::user()->isAbleTo('language manage')) {
+        if ($this->authUser()->isAbleTo('language manage')) {
             return view('admin.lang.import-language');
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
@@ -385,7 +392,7 @@ class LanguageController extends Controller
 
     public function importLangJsonProcess(Request $request)
     {
-        if (Auth::user()->isAbleTo('language manage')) {
+        if ($this->authUser()->isAbleTo('language manage')) {
             $validator = Validator::make(
                 $request->all(),
                 [

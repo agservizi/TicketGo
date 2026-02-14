@@ -9,7 +9,7 @@
     } else {
         $themeColor = $color;
     }
-    $currantLang = isset(Auth::user()->lang) ? Auth::user()->lang : 'en';
+    $currantLang = isset(Auth::user()->lang) ? Auth::user()->lang : 'it';
     $language = Languages::where('code', $currantLang)->first();
     $SITE_RTL = isset($setting['site_rtl']) ? $setting['site_rtl'] : 'off';
     $customThemeBackground = isset($setting['cust_theme_bg']) ? $setting['cust_theme_bg'] : 'off';
