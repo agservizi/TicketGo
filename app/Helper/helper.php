@@ -10,9 +10,11 @@ use App\Models\NotificationTemplateLangs;
 use App\Models\Permission;
 use App\Models\Settings;
 use App\Models\User;
+use Illuminate\Contracts\Filesystem\Cloud;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
@@ -184,7 +186,7 @@ if (!function_exists('getCompanyAllSettings')) {
             if (!empty($userId)) {
                 $user = User::find($userId);
             } elseif (Auth::check()) {
-                $user = auth()->user();
+                $user = Auth::user();
             } else {
                 $user = User::find(1);
             }
@@ -218,13 +220,13 @@ if (!function_exists('companySettingCacheForget')) {
             if (!empty($userId)) {
                 $user = User::find($userId);
             } else {
-                $user = auth()->user();
+                $user = Auth::user();
             }
 
             $key = 'company_settings_' . $user->id;
             Cache::forget($key);
         } catch (Exception $e) {
-            Log::error('companySettingCacheForget', $e->getMessage());
+            Log::error('companySettingCacheForget', ['message' => $e->getMessage()]);
         }
     }
 }
@@ -549,7 +551,11 @@ if (!function_exists('getFile')) {
                     'filesystems.disks.s3.endpoint' => $storageSettings['s3_endpoint'],
                 ]
             );
-            return Storage::disk('s3')->url($path);
+            $s3Disk = Storage::disk('s3');
+            if ($s3Disk instanceof Cloud) {
+                return $s3Disk->url($path);
+            }
+            return asset($path);
         } else if (isset($storageSettings['storage_setting']) && $storageSettings['storage_setting'] == 'wasabi') {
 
             config(
@@ -563,7 +569,11 @@ if (!function_exists('getFile')) {
                 ]
             );
 
-            return Storage::disk('wasabi')->url($path);
+            $wasabiDisk = Storage::disk('wasabi');
+            if ($wasabiDisk instanceof Cloud) {
+                return $wasabiDisk->url($path);
+            }
+            return asset($path);
         } else {
             return asset($path);
         }
@@ -908,7 +918,7 @@ if (!function_exists('getActiveModules')) {
 
         if ($userId !== null) {
             $user = User::find($userId);
-        } else if (Auth::check() && Auth::user()->hasRole('admin')) {
+        } else if (Auth::check() && Auth::user()->type == 'admin') {
             $user = Auth::user();
         } else if (Auth::check()) {
             $user = User::where('id', Auth::user()->created_by)->first();
@@ -950,7 +960,7 @@ if (!function_exists('moduleIsActive')) {
 
             if ($userId !== null) {
                 $user = User::find($userId);
-            } else if (Auth::check() && Auth::user()->hasRole('admin')) {
+            } else if (Auth::check() && Auth::user()->type == 'admin') {
                 $user = Auth::user();
             } else if (Auth::check()) {
                 $user = User::where('id', Auth::user()->created_by)->first();
@@ -982,9 +992,9 @@ if (!function_exists('sideMenuCacheForget')) {
         if (!empty($user_id)) {
             $user = User::find($user_id);
         } else {
-            $user = auth()->user();
+            $user = Auth::user();
         }
-        if ($user->hasRole('admin')) {
+        if (isset($user->type) && $user->type == 'admin') {
             $users = User::select('id')->where('created_by', $user->id)->pluck('id');
             foreach ($users as $id) {
                 try {
@@ -1020,7 +1030,7 @@ if (!function_exists('error_res')) {
     {
         $msg = $msg == "" ? "error" : $msg;
         $msg_id = 'error.' . $msg;
-        $converted = \Lang::get($msg_id, $args);
+        $converted = Lang::get($msg_id, $args);
         $msg = $msg_id == $converted ? $msg : $converted;
         $json = array(
             'flag' => 0,
@@ -1099,7 +1109,11 @@ if (!function_exists('sendTicketEmail')) {
         if (!isset($companySettings[$templateName]) || $companySettings[$templateName] != 1) {
             return;
         }
-        $ticketNumber = moduleIsActive('TicketNumber') ? Workdo\TicketNumber\Entities\TicketNumber::ticketNumberFormat($ticket->id) : $ticket->ticket_id;
+        $ticketNumber = $ticket->ticket_id;
+        $ticketNumberClass = '\\Workdo\\TicketNumber\\Entities\\TicketNumber';
+        if (moduleIsActive('TicketNumber') && class_exists($ticketNumberClass) && method_exists($ticketNumberClass, 'ticketNumberFormat')) {
+            $ticketNumber = $ticketNumberClass::ticketNumberFormat($ticket->id);
+        }
         $uArr = [
             'ticket_name' => $ticket->name,
             'ticket_id' => $ticketNumber,
