@@ -48,23 +48,12 @@
         </div>
         <div class="modal-footer">
             <div class="buttons">
-                <button type="submit" class="button" onclick="checkEnv();return false">
+                <button type="submit" class="button">
                     {{ trans('installer_messages.next') }}
                 </button>
             </div>
         </div>
     </form>
-    <script>
-        function checkEnv() {
-            $.easyAjax({
-                url: "{!! route('LaravelInstaller::environmentSave') !!}",
-                type: "GET",
-                data: $("#env-form").serialize(),
-                container: "#env-form",
-                messagePosition: "inline"
-            });
-        }
-    </script>
 @stop
 
 @section('scripts')
