@@ -40,11 +40,18 @@ class HomeController extends Controller
     public function __construct()
     {
         // $this->middleware('2fa');
-        if (moduleIsActive('CustomerLogin')) {
-            $this->middleware('CustomerLogin')->only(['index']);
+        try {
+            if (moduleIsActive('CustomerLogin')) {
+                $this->middleware('CustomerLogin')->only(['index']);
+            }
+        } catch (\Throwable $th) {
         }
 
-        $language = getActiveLanguage();
+        try {
+            $language = getActiveLanguage();
+        } catch (\Throwable $th) {
+            $language = 'en';
+        }
         App::setLocale(isset($language) ? $language : 'en');
     }
     public function index()
