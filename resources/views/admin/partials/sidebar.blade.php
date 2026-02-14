@@ -1,7 +1,11 @@
 @php
     $forcedSidebarLogo = 'uploads/logo/logoticketgo.png';
-    $forcedSidebarLogoPath = public_path($forcedSidebarLogo);
-    $sidebarLogo = asset($forcedSidebarLogo) . (file_exists($forcedSidebarLogoPath) ? ('?v=' . filemtime($forcedSidebarLogoPath)) : '');
+    $forcedSidebarLogoPath = base_path($forcedSidebarLogo);
+    $sidebarLogo = '';
+
+    if (file_exists($forcedSidebarLogoPath)) {
+        $sidebarLogo = 'data:image/png;base64,' . base64_encode(file_get_contents($forcedSidebarLogoPath));
+    }
 @endphp
 
 <nav
