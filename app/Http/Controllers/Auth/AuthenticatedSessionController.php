@@ -18,7 +18,7 @@ class AuthenticatedSessionController extends Controller
 {
     public function create()
     {
-        return view('auth.login');
+        return $this->showLoginForm();
     }
 
     public function __construct()
@@ -92,6 +92,9 @@ class AuthenticatedSessionController extends Controller
             $lang = array_key_exists($lang, languages()) ? $lang : 'en';
         }
         $language = Languages::where('code',$lang)->first();
+        if (!$language) {
+            $language = (object) ['fullName' => strtoupper($lang)];
+        }
         $settings = getCompanyAllSettings();
         App::setLocale($lang);
 
