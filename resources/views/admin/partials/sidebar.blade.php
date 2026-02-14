@@ -9,9 +9,9 @@
            <div class="m-header main-logo">
                <a href="{{ route('admin.dashboard') }}" class="b-brand">
                    <img src="{{ $sidebarLogo }}"
-                       alt="{{ config('app.name', 'TicketGo SaaS') }}" class="logo logo-lg" style="display:block;max-height:42px;width:auto;background:#fff;padding:4px;border-radius:6px;">
+                       alt="{{ config('app.name', 'TicketGo SaaS') }}" class="logo logo-lg">
                        <img src="{{ $sidebarLogo }}"
-                       alt="{{ config('app.name', 'TicketGo SaaS') }}" class="logo logo-sm" style="display:block;max-height:34px;width:auto;background:#fff;padding:2px;border-radius:6px;">
+                       alt="{{ config('app.name', 'TicketGo SaaS') }}" class="logo logo-sm">
                </a>
            </div>
            <div class="navbar-content">
