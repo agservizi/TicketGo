@@ -27,6 +27,16 @@ require __DIR__ . '/auth.php';
 
 Route::any('/cookie-consent', [SettingsController::class, 'CookieConsent'])->name('cookie-consent');
 
+Route::get('/sidebar-logo', function () {
+    $logoPath = base_path('uploads/logo/logoticketgo.png');
+
+    if (!file_exists($logoPath)) {
+        abort(404);
+    }
+
+    return response()->file($logoPath);
+})->name('sidebar.logo');
+
 Route::controller(HomeController::class)->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::post('home', 'store')->name('home.store');
