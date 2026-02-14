@@ -90,10 +90,10 @@ class AuthenticatedSessionController extends Controller
             if ($lang == '') {
                 $lang = getActiveLanguage();
             } else {
-                $lang = array_key_exists($lang, languages()) ? $lang : 'en';
+                $lang = array_key_exists($lang, languages()) ? $lang : 'it';
             }
         } catch (\Throwable $th) {
-            $lang = 'en';
+            $lang = 'it';
         }
 
         try {

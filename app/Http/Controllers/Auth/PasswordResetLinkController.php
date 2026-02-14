@@ -19,7 +19,7 @@ class PasswordResetLinkController extends Controller
         if ($lang == '') {
             $lang = getActiveLanguage();
         } else {
-            $lang = array_key_exists($lang, languages()) ? $lang : 'en';
+            $lang = array_key_exists($lang, languages()) ? $lang : 'it';
         }
         $language = Languages::where('code', $lang)->first();
         App::setLocale($lang);

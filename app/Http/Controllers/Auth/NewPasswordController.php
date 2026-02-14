@@ -21,7 +21,7 @@ class NewPasswordController extends Controller
         if ($lang == '') {
             $lang = getActiveLanguage();
         } else {
-            $lang = array_key_exists($lang, languages()) ? $lang : 'en';
+            $lang = array_key_exists($lang, languages()) ? $lang : 'it';
         }
         App::setLocale($lang);
 

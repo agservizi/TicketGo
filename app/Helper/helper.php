@@ -649,22 +649,7 @@ if (!function_exists('languages')) {
             $languages = Languages::whereNotIn('code', $disableLanguages)->pluck('fullName', 'code')->toArray();
         } catch (Exception $e) {
             $languages = [
-                "ar" => "Arabic",
-                "zh" => "Chinese",
-                "da" => "Danish",
-                "de" => "German",
-                "en" => "English",
-                "es" => "Spanish",
-                "fr" => "French",
-                "he" => "Hebrew",
-                "it" => "Italian",
-                "ja" => "Japanese",
-                "nl" => "Dutch",
-                "pl" => "Polish",
-                "pt" => "Portuguese",
-                "ru" => "Russian",
-                "tr" => "Turkish",
-                "pt-br" => "Portuguese(Brazil)",
+                "it" => "Italiano",
             ];
         }
         return $languages;
@@ -679,7 +664,7 @@ if (!function_exists('getActiveLanguage')) {
             $language = Auth::user()->lang;
         } else {
             $settings = getCompanyAllSettings();
-            $language = isset($settings['default_language']) ? $settings['default_language'] : 'en';
+            $language = isset($settings['default_language']) ? $settings['default_language'] : 'it';
         }
 
         return $language;
