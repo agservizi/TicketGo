@@ -1,8 +1,10 @@
 @php
-    $sidebarLogo = getFile(getSidebarLogo());
-    $sidebarLogoFallback = asset('uploads/logo/logoticketgo.png');
-    $sidebarFav = getFile(getFavIcon());
-    $sidebarFavFallback = asset('uploads/logo/favicon.png');
+    $forcedSidebarLogo = 'uploads/logo/logoticketgo.png';
+    $forcedSidebarLogoPath = public_path($forcedSidebarLogo);
+    $sidebarLogo = asset($forcedSidebarLogo) . (file_exists($forcedSidebarLogoPath) ? ('?v=' . filemtime($forcedSidebarLogoPath)) : '');
+    $sidebarLogoFallback = asset($forcedSidebarLogo);
+    $sidebarFav = $sidebarLogo;
+    $sidebarFavFallback = $sidebarLogoFallback;
 @endphp
 
 <nav
