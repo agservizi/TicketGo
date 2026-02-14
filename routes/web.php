@@ -48,6 +48,27 @@ Route::get('/sidebar-logo', function () {
     abort(404);
 })->name('sidebar.logo');
 
+Route::get('/sidebar-logo-icon', function () {
+    $iconSettingPath = getFavIcon();
+    $iconBasePath = base_path($iconSettingPath);
+    $iconPublicPath = public_path($iconSettingPath);
+
+    if (file_exists($iconBasePath)) {
+        return response()->file($iconBasePath);
+    }
+
+    if (file_exists($iconPublicPath)) {
+        return response()->file($iconPublicPath);
+    }
+
+    $iconUrl = getFile($iconSettingPath);
+    if (!empty($iconUrl)) {
+        return redirect()->away($iconUrl);
+    }
+
+    abort(404);
+})->name('sidebar.logo.icon');
+
 Route::controller(HomeController::class)->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::post('home', 'store')->name('home.store');

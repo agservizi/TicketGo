@@ -1,5 +1,6 @@
 @php
     $sidebarLogo = route('sidebar.logo', [], false) . '?v=' . time();
+    $sidebarIcon = route('sidebar.logo.icon', [], false) . '?v=' . time();
 @endphp
 
 <nav
@@ -10,7 +11,7 @@
                <a href="{{ route('admin.dashboard') }}" class="b-brand">
                    <img src="{{ $sidebarLogo }}"
                        alt="{{ config('app.name', 'TicketGo SaaS') }}" class="logo logo-lg">
-                       <img src="{{ $sidebarLogo }}"
+                       <img src="{{ $sidebarIcon }}"
                        alt="{{ config('app.name', 'TicketGo SaaS') }}" class="logo logo-sm">
                </a>
            </div>
