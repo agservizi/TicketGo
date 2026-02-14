@@ -10,7 +10,7 @@
 
 @section('container')
 
-    <form method="post" action="{{ route('LaravelInstaller::environmentSave') }}">
+    <form method="get" action="{{ route('LaravelInstaller::environmentSave') }}">
         {!! csrf_field() !!}
         <textarea class="textarea" name="envConfig">{{ $envConfig }}</textarea>
         <div class="buttons buttons--right">

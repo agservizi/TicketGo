@@ -20,7 +20,7 @@
 @endsection
 
 @section('container')
-    <form method="post" action="{{ route('LaravelInstaller::environmentSave') }}" id="env-form">
+    <form method="get" action="{{ route('LaravelInstaller::environmentSave') }}" id="env-form">
         <div class="form-group">
             <label class="col-sm-2 control-label">Hostname</label>
 
@@ -48,7 +48,7 @@
         </div>
         <div class="modal-footer">
             <div class="buttons">
-                <button class="button" onclick="checkEnv();return false">
+                <button type="submit" class="button" onclick="checkEnv();return false">
                     {{ trans('installer_messages.next') }}
                 </button>
             </div>
