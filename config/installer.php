@@ -20,17 +20,12 @@ return [
         'publish' => false,
     ],
     'requirements' => [
-        'php' => [
-            'openssl',
-            'pdo',
-            'mbstring',
-            'tokenizer',
-            'JSON',
-            'cURL',
-        ],
-        'apache' => [
-            'mod_rewrite',
-        ],
+        'openssl',
+        'pdo',
+        'mbstring',
+        'tokenizer',
+        'json',
+        'curl',
     ],
 
     /*
