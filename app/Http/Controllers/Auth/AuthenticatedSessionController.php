@@ -86,16 +86,30 @@ class AuthenticatedSessionController extends Controller
 
     public function showLoginForm($lang = '')
     {
-        if ($lang == '') {
-            $lang = getActiveLanguage();
-        } else {
-            $lang = array_key_exists($lang, languages()) ? $lang : 'en';
+        try {
+            if ($lang == '') {
+                $lang = getActiveLanguage();
+            } else {
+                $lang = array_key_exists($lang, languages()) ? $lang : 'en';
+            }
+        } catch (\Throwable $th) {
+            $lang = 'en';
         }
-        $language = Languages::where('code',$lang)->first();
+
+        try {
+            $language = Languages::where('code', $lang)->first();
+        } catch (\Throwable $th) {
+            $language = null;
+        }
+
         if (!$language) {
             $language = (object) ['fullName' => strtoupper($lang)];
         }
-        $settings = getCompanyAllSettings();
+        try {
+            $settings = getCompanyAllSettings();
+        } catch (\Throwable $th) {
+            $settings = [];
+        }
         App::setLocale($lang);
 
         return view('auth.login', compact('lang', 'settings','language'));

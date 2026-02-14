@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Events\CompanySettingEvent;
@@ -175,27 +176,35 @@ if (!function_exists('generateCompanySettings')) {
 if (!function_exists('getCompanyAllSettings')) {
     function getCompanyAllSettings($userId = null)
     {
-        if (!empty($userId)) {
-            $user = User::find($userId);
-        } elseif (Auth::check()) {
-            $user = auth()->user();
-        } else {
-            $user = User::find(1);
-        }
+        try {
+            if (!Schema::hasTable('users') || !Schema::hasTable('settings')) {
+                return [];
+            }
 
-        // For Other roles Such as Agent
-        if (Auth::check() && Auth::user()->parent == 1) {
-            $user = User::find(id: Auth::user()->parent == 1);
-        }
+            if (!empty($userId)) {
+                $user = User::find($userId);
+            } elseif (Auth::check()) {
+                $user = auth()->user();
+            } else {
+                $user = User::find(1);
+            }
+
+            // For Other roles Such as Agent
+            if (Auth::check() && Auth::user()->parent == 1) {
+                $user = User::find(id: Auth::user()->parent == 1);
+            }
 
 
-        if (!empty($user)) {
-            $key = 'company_settings_' . $user->id;
-            return Cache::rememberForever($key, function () use ($user) {
-                $settings = [];
-                $settings = Settings::where('created_by', $user->id)->pluck('value', 'name')->toArray();
-                return $settings;
-            });
+            if (!empty($user)) {
+                $key = 'company_settings_' . $user->id;
+                return Cache::rememberForever($key, function () use ($user) {
+                    $settings = [];
+                    $settings = Settings::where('created_by', $user->id)->pluck('value', 'name')->toArray();
+                    return $settings;
+                });
+            }
+        } catch (\Throwable $th) {
+            return [];
         }
         return [];
     }
