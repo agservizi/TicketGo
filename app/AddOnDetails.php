@@ -42,6 +42,9 @@ class AddOnDetails
     {
         if (is_null($this->addon)) {
             $path = base_path('packages/workdo');
+            if (!File::isDirectory($path)) {
+                return [];
+            }
             return File::directories($path);
         }
         return base_path('packages/workdo/' . $this->name);
@@ -134,6 +137,9 @@ class AddOnDetails
     public function getDirectories()
     {
         $path = base_path('packages/workdo');
+        if (!File::isDirectory($path)) {
+            return [];
+        }
         return File::directories($path);
     }
 
