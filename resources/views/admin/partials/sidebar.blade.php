@@ -1,6 +1,6 @@
 @php
     $sidebarLogo = getFile(getSidebarLogo());
-    $sidebarLogoFallback = asset('uploads/logo/logo-dark.png');
+    $sidebarLogoFallback = asset('uploads/logo/logoticketgo.png');
     $sidebarFav = getFile(getFavIcon());
     $sidebarFavFallback = asset('uploads/logo/favicon.png');
 @endphp

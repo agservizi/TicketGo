@@ -593,26 +593,27 @@ if (!function_exists('getFile')) {
 if (!function_exists('getSidebarLogo')) {
     function getSidebarLogo()
     {
+        $defaultLogo = 'uploads/logo/logoticketgo.png';
         $companySettings = getCompanyAllSettings();
         if ((isset($companySettings['cust_darklayout']) ? $companySettings['cust_darklayout'] : 'off') == 'on') {
             if (!empty($companySettings['light_logo'])) {
                 if (checkFile($companySettings['light_logo'])) {
                     return $companySettings['light_logo'];
                 } else {
-                    return 'uploads/logo/logo-light.png';
+                    return $defaultLogo;
                 }
             } else {
-                return 'uploads/logo/logo-light.png';
+                return $defaultLogo;
             }
         } else {
             if (!empty($companySettings['dark_logo'])) {
                 if (checkFile($companySettings['dark_logo'])) {
                     return $companySettings['dark_logo'];
                 } else {
-                    return 'uploads/logo/logo-dark.png';
+                    return $defaultLogo;
                 }
             } else {
-                return 'uploads/logo/logo-dark.png';
+                return $defaultLogo;
             }
         }
     }
