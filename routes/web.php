@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AddOnController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -149,11 +148,6 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'XSS'])->group(funct
     Route::post('role-update/{roleId}', [RoleController::class, 'update'])->name('role.update');
     Route::delete('role-delete/{roleId}', [RoleController::class, 'destroy'])->name('role.delete');
 
-    // AddOn Manager Page
-    Route::get('addon/list', [AddOnController::class, 'index'])->name('addon.list');
-    Route::post('addon-enable', [AddOnController::class, 'addonEnable'])->name('addon.enable');
-    Route::get('addon/add', [AddOnController::class, 'addAddOn'])->name('addon.add');
-    Route::post('addon-install', [AddOnController::class, 'installAddon'])->name('addon.install');
 });
 
 Route::group(['middleware' => ['web', 'auth', 'verified', 'XSS']], function () {

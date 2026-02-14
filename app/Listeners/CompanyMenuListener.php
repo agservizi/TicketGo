@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\CompanyMenuEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Auth;
 
 class CompanyMenuListener
 {
@@ -66,20 +65,6 @@ class CompanyMenuListener
             'module' => $module,
             'permission' => 'user manage'
         ]);
-        if (Auth::user()->hasRole('admin')) {
-            $menu->add([
-                'title' => __('Add-on Manager'),
-                'icon' => 'layout-2',
-                'name' => 'add-on-manager',
-                'parent' => null,
-                'order' => 300,
-                'ignore_if' => [],
-                'depend_on' => [],
-                'route' => 'admin.addon.list',
-                'module' => $module,
-                'permission' => ''
-            ]);
-        }
          $menu->add([
             'title' => __('Conversation'),
             'icon' => 'brand-hipchat',

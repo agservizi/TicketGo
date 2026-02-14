@@ -64,28 +64,15 @@ if (!function_exists(function: 'generateMenu')) {
                 $html .= '<li class="dash-item">';
             }
 
-            if ($item['name'] == 'add-on-manager') {
-                $html .= '<a href="' . (!empty($item['route']) ? route($item['route']) : '#!') . '" class="dash-link d-flex align-items-center">';
-                if ($item['parent'] == null) {
-                    $html .= ' <span class="dash-micon">
-                                 <i class="ti ti-' . $item['icon'] . '">
-                                 </i>
-                                </span>
-                    <span class="dash-mtext">
-                    <div class="text-center"> <span class="dash-mtext">';
-                    $html .= __($item['title']) . '</span> <span class="text-center d-block animate-charcter">Premium</span></div>';
-                }
-            } else {
-                $html .= '<a href="' . (!empty($item['route']) ? route($item['route']) : '#!') . '" class="dash-link">';
-                if ($item['parent'] == null) {
-                    $html .= ' <span class="dash-micon">
+            $html .= '<a href="' . (!empty($item['route']) ? route($item['route']) : '#!') . '" class="dash-link">';
+            if ($item['parent'] == null) {
+                $html .= ' <span class="dash-micon">
                                  <i class="ti ti-' . $item['icon'] . '">
                                  </i>
                                 </span>
                     <span class="dash-mtext">';
-                }
-                $html .= __($item['title']) . '</span>';
             }
+            $html .= __($item['title']) . '</span>';
 
 
             if ($hasChildren) {
