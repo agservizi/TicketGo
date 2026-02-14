@@ -23,10 +23,6 @@ class AuthenticatedSessionController extends Controller
 
     public function __construct()
     {
-        if (!file_exists(storage_path() . "/installed")) {
-            header('location:install');
-            die;
-        }
     }
 
 

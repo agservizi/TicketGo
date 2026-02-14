@@ -17,11 +17,6 @@ class NewPasswordController extends Controller
 {
     public function create(Request $request,$token, $lang = '')
     {
-        if (!file_exists(storage_path() . "/installed")) {
-            header('location:install');
-            die;
-        }
-
         $settings = getCompanyAllSettings();
         if ($lang == '') {
             $lang = getActiveLanguage();

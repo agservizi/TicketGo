@@ -10,17 +10,11 @@ use App\Models\Utility;
 
 class XSS
 {
-    use \Froiden\LaravelInstaller\Helpers\MigrationsHelper;
-
     public function handle($request, Closure $next)
     {
-        // need to remove
-        if (file_exists(storage_path() . "/installed")) {
+        try {
             App::setLocale(getActiveLanguage());
-        }
-
-        if (!file_exists(storage_path() . "/installed")) {
-            return redirect()->route('LaravelUpdater::welcome');
+        } catch (\Throwable $th) {
         }
 
         $input = $request->all();

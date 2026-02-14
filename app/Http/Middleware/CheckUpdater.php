@@ -22,7 +22,7 @@ class CheckUpdater
                 $canInstall = new \Froiden\LaravelInstaller\Middleware\canInstall();
 
                 if (! $canInstall->alreadyInstalled()) {
-                    return redirect()->route('LaravelInstaller::welcome');
+                    abort(404);
                 }
 
 

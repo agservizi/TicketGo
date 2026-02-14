@@ -40,10 +40,6 @@ class HomeController extends Controller
     public function __construct()
     {
         // $this->middleware('2fa');
-
-        if (!file_exists(storage_path() . "/installed")) {
-            return redirect('install');
-        }
         if (moduleIsActive('CustomerLogin')) {
             $this->middleware('CustomerLogin')->only(['index']);
         }
@@ -55,10 +51,6 @@ class HomeController extends Controller
     {
 
         $this->middleware('2fa');
-
-        if (!file_exists(storage_path() . "/installed")) {
-            return redirect('install');
-        }
 
         $customFields = CustomField::orderBy('order')->get();
         $categories = Category::get();
