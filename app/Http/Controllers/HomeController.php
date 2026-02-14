@@ -209,7 +209,6 @@ class HomeController extends Controller
             // Ticket Create From Live Chat
             $validation = [
                 'name' => 'required|string|max:255',
-                'name' => 'required',
                 'email' => 'required|email',
                 'subject' => 'required',
                 'description' => 'required',

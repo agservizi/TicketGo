@@ -56,18 +56,18 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
         $user = Auth::user();
         if ($user->delete_status == 1) {
-            auth()->logout();
+            Auth::guard('web')->logout();
         }
 
         if ($user->is_enable_login != 1 && $user->type != '0') {
-            auth()->logout();
+            Auth::guard('web')->logout();
             return redirect()->route('login')->with('error', 'Your account is disabled from admin.');
         }
 
         if(!moduleIsActive('CustomerLogin'))
         {
             if(($request->email == $user->email) && ($user->type == 'customer')) {
-                auth()->logout();
+                Auth::guard('web')->logout();
                 return redirect()->route('login')->with('error', 'Customer Login Module is disabled from admin.');
                 
             }
@@ -77,8 +77,10 @@ class AuthenticatedSessionController extends Controller
         {
             return redirect()->intended(RouteServiceProvider::HOME);
         }else {
-
-                return redirect()->intended(\Workdo\CustomerLogin\Providers\RouteServiceProvider :: HOME);                       
+                $customerHome = defined('\\Workdo\\CustomerLogin\\Providers\\RouteServiceProvider::HOME')
+                    ? constant('\\Workdo\\CustomerLogin\\Providers\\RouteServiceProvider::HOME')
+                    : RouteServiceProvider::HOME;
+                return redirect()->intended($customerHome);
         }            
     }
 
