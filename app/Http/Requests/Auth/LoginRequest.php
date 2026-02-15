@@ -55,18 +55,25 @@ class LoginRequest extends FormRequest
         }
         
         // $ip = '49.36.83.154'; 
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = $this->ip() ?? ($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1');
         $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
-        $whichbrowser = new \WhichBrowser\Parser($_SERVER['HTTP_USER_AGENT']);
+        if (!is_array($query)) {
+            $query = [];
+        }
+
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? ($this->userAgent() ?? '');
+        $whichbrowser = new \WhichBrowser\Parser($userAgent);
         if ($whichbrowser->device->type == 'bot') {
             return;
         }
-        $referrer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : null;
+        $referrerHeader = $_SERVER['HTTP_REFERER'] ?? $this->headers->get('referer');
+        $referrer = $referrerHeader ? parse_url($referrerHeader) : null;
         /* Detect extra details about the user */
         $query['browser_name'] = $whichbrowser->browser->name ?? null;
         $query['os_name'] = $whichbrowser->os->name ?? null;
-        $query['browser_language'] = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? mb_substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : null;
-        $query['device_type'] = get_device_type($_SERVER['HTTP_USER_AGENT']);
+        $acceptLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? $this->headers->get('accept-language');
+        $query['browser_language'] = !empty($acceptLanguage) ? mb_substr($acceptLanguage, 0, 2) : null;
+        $query['device_type'] = get_device_type($userAgent);
         $query['referrer_host'] = !empty($referrer['host']);
         $query['referrer_path'] = !empty($referrer['path']);
 

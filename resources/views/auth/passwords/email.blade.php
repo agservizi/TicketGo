@@ -13,7 +13,7 @@
                     <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
                     <path d="M2 12h20"></path>
                 </svg>
-                <span class="drp-text"> {{ ucfirst($language->fullName) }}
+                <span class="drp-text"> {{ ucfirst(optional($language)->fullName ?? strtoupper($lang ?? 'it')) }}
                 </span>
             </a>
             <div class="dropdown-menu dash-h-dropdown dropdown-menu-end">

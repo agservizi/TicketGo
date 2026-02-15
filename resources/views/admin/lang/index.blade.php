@@ -19,7 +19,7 @@
                         title="" data-bs-original-title="Delete" aria-label="Delete"
                         data-confirm="{{ __('Are You Sure?') }}"
                         data-text="{{ __('This action can not be undone. Do you want to continue?') }}"
-                        data-confirm-yes="delete-form-{{ $currantLang }}"><i class="ti ti-trash text-white text-white"></i></a>
+                        data-confirm-yes="delete-form-{{ $currantLang }}"><i class="ti ti-trash text-white"></i></a>
                 </form>
             </div>
         @endif

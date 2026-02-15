@@ -207,19 +207,25 @@ class AddOnDetails
     public function closeTickets($addonName)
     {
         if ($addonName == 'WhatsAppChatBotAndChat') {
+            /** @var \Illuminate\Database\Eloquent\Collection<int, Ticket> $tickets */
             $tickets = Ticket::where('type', 'Whatsapp')->get();
+            /** @var Ticket $ticket */
             foreach ($tickets as $ticket) {
                 $ticket->status = "Closed";
                 $ticket->save();
             }
         } elseif ($addonName == 'InstagramChat') {
+            /** @var \Illuminate\Database\Eloquent\Collection<int, Ticket> $tickets */
             $tickets = Ticket::where('type', 'Instagram')->get();
+            /** @var Ticket $ticket */
             foreach ($tickets as $ticket) {
                 $ticket->status = "Closed";
                 $ticket->save();
             }
         }elseif ($addonName == 'FacebookChat') {
+            /** @var \Illuminate\Database\Eloquent\Collection<int, Ticket> $tickets */
             $tickets = Ticket::where('type', 'Facebook')->get();
+            /** @var Ticket $ticket */
             foreach ($tickets as $ticket) {
                 $ticket->status = "Closed";
                 $ticket->save();

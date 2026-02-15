@@ -668,8 +668,8 @@
                                         @endphp
                                         @foreach ($email_notification_modules as $e_module)
                                             @if (
-                                                    Laratrust::hasPermission($e_module . ' manage') ||
-                                                    Laratrust::hasPermission(strtolower($e_module) . ' manage') ||
+                                                    \Laratrust\LaratrustFacade::hasPermission($e_module . ' manage') ||
+                                                    \Laratrust\LaratrustFacade::hasPermission(strtolower($e_module) . ' manage') ||
                                                     $e_module == 'General'
                                                 )
                                                 <li class="nav-item">

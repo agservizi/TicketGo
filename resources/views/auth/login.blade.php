@@ -107,7 +107,7 @@
                                                                         $settings['google_recaptcha_version'] == 'v2-checkbox'
                                                                     )
                                                                                                     <div class="form-group mb-4">
-                                                                                                        {!! NoCaptcha::display() !!}
+                                                                                                        {!! \Anhskohbo\NoCaptcha\Facades\NoCaptcha::display() !!}
                                                                                                         @error('g-recaptcha-response')
                                                                                                             <span class="small text-danger" role="alert">
                                                                                                                 <strong>{{ $message }}</strong>
@@ -166,7 +166,7 @@
 
     @if (isset($settings['RECAPTCHA_MODULE']) && $settings['RECAPTCHA_MODULE'] == 'yes')
         @if (isset($settings['google_recaptcha_version']) && $settings['google_recaptcha_version'] == 'v2-checkbox')
-            {!! NoCaptcha::renderJs() !!}
+            {!! \Anhskohbo\NoCaptcha\Facades\NoCaptcha::renderJs() !!}
         @else
             <script src="https://www.google.com/recaptcha/api.js?render={{ $settings['NOCAPTCHA_SITEKEY'] }}"></script>
             <script>

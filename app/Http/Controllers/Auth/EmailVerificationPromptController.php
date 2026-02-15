@@ -18,6 +18,6 @@ class EmailVerificationPromptController extends Controller
         App::setLocale($lang);
         return $request->user()->hasVerifiedEmail()
                     ? redirect()->intended(RouteServiceProvider::HOME)
-                    : view('auth.verify-email',compact('lang'));
+                    : view('auth.verify-email',compact('lang', 'settings'));
     }
 }

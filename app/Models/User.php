@@ -13,7 +13,7 @@ use Laratrust\Contracts\LaratrustUser;
 
 class User extends Authenticatable implements LaratrustUser
 {
-    use Notifiable, UserTrait, HasApiTokens, HasRolesAndPermissions;
+    use Notifiable, UserTrait, HasApiTokens, HasRolesAndPermissions, HasFactory;
 
     protected $fillable = [
         'name',
